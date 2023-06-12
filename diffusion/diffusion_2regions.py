@@ -17,7 +17,7 @@ class DiffusionEquationSolver:
         self.num_steps = int(final_time / time_step) + 1
 
         self.grid_cv = np.zeros(num_points_x)
-        self.grid_cc = np.zeros(num_points_x - 1)
+        self.grid_cc = np.zeros(num_points_x)
         self.current_time = 0.0
 
     def set_initial_conditions(self, initial_cv, initial_cc):
@@ -32,15 +32,15 @@ class DiffusionEquationSolver:
         next_grid_cv = self.grid_cv.copy()
         next_grid_cc = self.grid_cc.copy()
 
-        for i in range(1, self.num_points_x):
+        for i in range(1, self.num_points_x - 1):
             next_grid_cv[i] = self.grid_cv[i] + self.dt * self.diffusion_term_D1(i)
             next_grid_cc[i] = self.grid_cc[i] + self.dt * self.diffusion_term_D2(i)
-
         next_grid_cv[-1] = self.grid_cv[-1] + self.dt * (self.grid_cc[1]/self.D2 + self.grid_cv[-2] - (self.D2+1.0)/self.D2 * self.grid_cv[-1]) # D2 * dcv/dx = dcc/dx at x = 0
 
         # Apply boundary conditions
         next_grid_cv[0] = next_grid_cv[1]  # dcv/dx = 0 at x = -1
         next_grid_cc[-1] = next_grid_cc[-2] # dcc/dx = 0 at x = 1
+        next_grid_cc[0] = next_grid_cv[-1]  # dcv/dx = 0 at x = -1
 
         self.grid_cv = next_grid_cv
         self.grid_cc = next_grid_cc
@@ -53,10 +53,11 @@ class DiffusionEquationSolver:
         return (self.grid_cc[i+1] - 2 * self.grid_cc[i] + self.grid_cc[i-1]) / self.dx**2
 
     def plot_solution(self):
-        x = np.linspace(-self.size_x/2, self.size_x/2, self.num_points_x + 1)
+        x1 = np.linspace(-self.size_x/2, 0, self.num_points_x)
+        x2 = np.linspace(0, self.size_x/2, self.num_points_x)
 
-        plt.plot(x, self.grid_cv, label='cv')
-        plt.plot(x, self.grid_cc, label='cc')
+        plt.plot(x1, self.grid_cv, label='cv')
+        plt.plot(x2, self.grid_cc, label='cc')
         plt.xlabel('x')
         plt.ylabel('Concentration')
         plt.legend()
