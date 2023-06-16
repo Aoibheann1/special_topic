@@ -4,9 +4,10 @@ import numpy as np
 
 
 class Simulation:
-    def __init__(self, D1, D2, x_start, x_end, t_start, t_end, n_x):
+    def __init__(self, D1, D2, a, x_start, x_end, t_start, t_end, n_x):
         self.D1 = D1
         self.D2 = D2
+        self.a = a
         self.x_start = x_start
         self.x_end = x_end
         self.t_start = t_start
@@ -22,7 +23,7 @@ class Simulation:
         C_initial = np.concatenate((C1_initial, C2_initial))
 
         # Create instance of Diffusion class
-        diffusion = Diffusion(self.D1, self.D2, dx)
+        diffusion = Diffusion(self.D1, self.D2, self.a, dx)
 
         # Solve the PDE system
         solution = solve_ivp(lambda t, C: diffusion.pde_system(None, t, C),
