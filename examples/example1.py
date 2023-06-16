@@ -7,7 +7,7 @@ a = 1e5
 x_start = -0.1
 x_end = 0.001
 t_start = 0.0
-t_end = 1.0
+t_end = 10.0
 n_x = 1000
 
 # Solve and visualize the diffusion equation

@@ -16,7 +16,8 @@ class Visualisation:
         self.ax.set_ylabel('c')
         self.ax.set_title('Time = ')
         self.ax.set_xlim(np.min(x), np.max(x))
-        self.ax.set_ylim(0, np.max(self.C2_solution))
+        #self.ax.set_ylim(0, np.max(self.C2_solution))
+        self.ax.set_ylim(0, 1)
         self.ax.legend()
         self.anim = None
 
