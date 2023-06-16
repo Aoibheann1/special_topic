@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "diffusion"
+name = "diffusion_package"
 version = "0.0.1"
 authors = [
   { name="Aoibheann1", email="alilymurray247@gmail.com" },

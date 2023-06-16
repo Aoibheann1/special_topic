@@ -1,5 +1,5 @@
 from scipy.integrate import solve_ivp
-from diffusion.diffusion_eq import Diffusion
+from .diffusion_eq import Diffusion
 import numpy as np
 
 

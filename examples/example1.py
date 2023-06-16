@@ -1,4 +1,8 @@
-from diffusion.solver.diffusion_solver import solve_and_visualise_diffusion
+#import sys
+#print(sys.executable)
+#from diffusion.diffusion_solver import solve_and_visualise_diffusion
+from diffusion_package.diffusion_solver import solve_and_visualise_diffusion
+
 
 # Set up the parameters
 d1 = 1e3

@@ -1,5 +1,5 @@
-from simulation.simulation import Simulation
-from visualisation.visualisation import Visualisation
+from .simulation import Simulation
+from .visualisation import Visualisation
 
 
 def solve_and_visualise_diffusion(D1, D2, x_start, x_end, t_start, t_end, n_x):
