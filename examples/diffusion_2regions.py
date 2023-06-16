@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
 
 
 class DiffusionEquationSolver:
@@ -29,22 +31,37 @@ class DiffusionEquationSolver:
             self.update()
 
     def update(self):
-        next_grid_cv = self.grid_cv.copy()
-        next_grid_cc = self.grid_cc.copy()
+        solution = solve_ivp(lambda t, u: pde_system(t, u, d1, d2, dx), (t_start, t_end), u_initial, method='BDF')
 
-        for i in range(1, self.num_points_x - 1):
-            next_grid_cv[i] = self.grid_cv[i] + self.dt * self.diffusion_term_D1(i)
-            next_grid_cc[i] = self.grid_cc[i] + self.dt * self.diffusion_term_D2(i)
-        next_grid_cv[-1] = self.grid_cv[-1] + self.dt * (self.grid_cc[1]/self.D2 + self.grid_cv[-2] - (self.D2+1.0)/self.D2 * self.grid_cv[-1]) # D2 * dcv/dx = dcc/dx at x = 0
+    
+    # central difference BCs at x=-1 and x-1, forward difference at x=0
+    def pde_system(self):
+        n = len(self.u) // 2
+        cv = self.u[:n]
+        cc = self.u[n:]
 
-        # Apply boundary conditions
-        next_grid_cv[0] = next_grid_cv[1]  # dcv/dx = 0 at x = -1
-        next_grid_cc[-1] = next_grid_cc[-2] # dcc/dx = 0 at x = 1
-        next_grid_cc[0] = next_grid_cv[-1]  # dcv/dx = 0 at x = -1
+        d2cv_dx2 = np.zeros_like(cv)
+        d2cc_dx2 = np.zeros_like(cc)
 
-        self.grid_cv = next_grid_cv
-        self.grid_cc = next_grid_cc
-        self.current_time += self.dt
+        # Compute second derivative of cv and cc
+        d2cv_dx2[1:-1] = (cv[:-2] - 2 * cv[1:-1] + cv[2:]) / self.dx**2
+        d2cc_dx2[1:-1] = (cc[:-2] - 2 * cc[1:-1] + cc[2:]) / self.dx**2
+
+        # Boundary conditions at x = -1
+        d2cv_dx2[0] = (2 * cv[1] - 2 * cv[0]) / self.dx**2
+
+        # Boundary conditions at x = 1
+        d2cc_dx2[-1] = (2 * cv[-2] - 2 * cv[-1]) / self.dx**2
+
+        # Boundary conditions at x = 0
+        d2cv_dx2[-1] = (cc[1]/self.d2 - (self.d2+1)/self.d2 * cv[-1] + cv[-2]) / self.dx**2
+        d2cc_dx2[0] = (cc[1]-(1.0+self.d2) * cc[0] + self.d2 * cv[-1]) / self.dx**2
+
+        # Compute the time derivatives
+        dcv_dt = d2cv_dx2 * self.d1
+        dcc_dt = d2cc_dx2
+
+        return np.concatenate((dcv_dt, dcc_dt))
 
     def diffusion_term_D1(self, i):
         return self.D1 * (self.grid_cv[i+1] - 2 * self.grid_cv[i] + self.grid_cv[i-1]) / self.dx**2

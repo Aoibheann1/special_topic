@@ -1,12 +1,12 @@
 import pytest
 import numpy as np
 try:
-    from diffusion.diffusion_2regions import DiffusionEquationSolver
+    from special_topic.examples.diffusion_2regions import DiffusionEquationSolver
 except ImportError:
     pass
 
 def test_group_import():
-    from diffusion.diffusion_2regions import DiffusionEquationSolver
+    from special_topic.examples.diffusion_2regions import DiffusionEquationSolver
 
 def test_initial_conditions():
     size_x = 2.0
