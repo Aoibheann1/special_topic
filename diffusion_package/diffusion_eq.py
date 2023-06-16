@@ -2,10 +2,9 @@ import numpy as np
 
 
 class Diffusion:
-    def __init__(self, D1, D2, a, dx):
-        self.D1 = D1
-        self.D2 = D2
-        self.a = a
+    def __init__(self, a1, a2, dx):
+        self.a1 = a1
+        self.a2 = a2
         self.dx = dx
 
     def pde_system(self, x, t, C):
@@ -27,17 +26,13 @@ class Diffusion:
         d2C2_dx2[-1] = (2 * C2[-2] - 2 * C2[-1]) / self.dx**2
 
         # Boundary conditions at x = 0
-        d2C1_dx2[-1] = ((self.a * self.D2 + 2 * self.D1) / (self.D1
-                        + self.a * self.D2) * C1[-2] - 2 * C1[-1]
-                        + self.D2 / (self.D1 + self.a * self.D2)
-                        * C2[1]) / self.dx**2
-        d2C2_dx2[0] = ((self.D1 + 2 * self.a * self.D2) / (self.D1
-                       + self.a * self.D2) * C2[1] - 2 * C2[0]
-                       + self.a * self.D1 / (self.D1 + self.a * self.D2)
-                       * C1[-2]) / self.dx**2
+        d2C1_dx2[-1] = ((1 + 2 * self.a2) / (1 + 2 * self.a2) * C1[-2]
+                        - 2 * C1[-1] + C2[1] / (1 + self.a2)) / self.dx**2
+        d2C2_dx2[0] = ((2 + self.a2) / (1 + self.a2) * C2[1] - 2 * C2[0]
+                       + self.a2 / (1 + self.a2) * C1[-2]) / self.dx**2
 
         # Compute the time derivatives
-        dC1_dt = self.D1 * d2C1_dx2
-        dC2_dt = self.D2 * d2C2_dx2
+        dC1_dt = self.a1 * d2C1_dx2
+        dC2_dt = d2C2_dx2
 
         return np.concatenate((dC1_dt, dC2_dt))
