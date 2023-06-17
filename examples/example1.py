@@ -7,7 +7,7 @@ a = 1e5
 x_start = -1e-1
 x_end = 1e-3
 t_start = 0.0
-t_end = 1.0
+t_end = 1e-6
 n_x = 1000
 
 a1 = d1 / d2 * (x_end / x_start) ** 2
