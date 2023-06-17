@@ -11,3 +11,4 @@ def solve(a1, a2, x_start, x_end, t_start, t_end, n_x):
     visualisation = Visualisation(x, C1_solution, C2_solution, t)
     visualisation.animate()
     visualisation.show()
+

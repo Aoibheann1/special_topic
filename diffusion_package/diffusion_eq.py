@@ -19,10 +19,10 @@ class Diffusion:
         d2C1_dx2[1:-1] = (C1[:-2] - 2 * C1[1:-1] + C1[2:]) / self.dx**2
         d2C2_dx2[1:-1] = (C2[:-2] - 2 * C2[1:-1] + C2[2:]) / self.dx**2
 
-        # Boundary conditions at x = -1
+        # Neumann Boundary conditions at x = -1
         d2C1_dx2[0] = (2 * C1[1] - 2 * C1[0]) / self.dx**2
 
-        # Boundary conditions at x = 1
+        # Neumann Boundary conditions at x = 1
         d2C2_dx2[-1] = (2 * C2[-2] - 2 * C2[-1]) / self.dx**2
 
         # Boundary conditions at x = 0
