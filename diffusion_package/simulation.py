@@ -23,16 +23,17 @@ class Simulation:
 
         # Create instance of Diffusion class
         diffusion = Diffusion(self.a1, self.a2, dx)
-
+        t_array = []
+        def time_steps(t, y):
+            t_array.append(t)
         # Solve the PDE system
         solution = solve_ivp(lambda t, C: diffusion.pde_system(None, t, C),
-                             (self.t_start, self.t_end), C_initial,
+                             (self.t_start, self.t_end), C_initial, t_eval=time_steps,
                              method='BDF')
 
         # Extract the solution
         x = np.linspace(self.x_start, self.x_end, self.n_x)
         C1_solution = solution.y[:self.n_x // 2, :]
         C2_solution = solution.y[self.n_x // 2:, :]
-        m = len(C1_solution[0, :])
-        t = np.linspace(self.t_start, self.t_end, m)
+        t = np.array(t_array)
         return x, t, C1_solution, C2_solution
