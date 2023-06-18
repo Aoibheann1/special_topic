@@ -1,8 +1,10 @@
 from functools import singledispatchmethod
 
+
 class BoundaryCondition:
-    def __init__(self, value):
+    def __init__(self, value, dx):
         self.value = value
+        self.dx = dx
 
     def apply(self, d2C_dx2, C):
         @singledispatchmethod
