@@ -68,7 +68,8 @@ class Visualization:
             None
         """
         if self.anim is None:
-            self.anim = FuncAnimation(self.fig, self.update, frames=len(self.t), interval=200)
+            self.anim = FuncAnimation(self.fig, self.update,
+                                      frames=len(self.t), interval=200)
 
     def show(self):
         """
