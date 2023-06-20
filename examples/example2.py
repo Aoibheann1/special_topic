@@ -16,4 +16,4 @@ c1_initial = np.ones(n_x // 2)
 c2_initial = np.zeros(n_x // 2)
 c_initial = np.concatenate((c1_initial, c2_initial))
 
-solve(d1, d2, x_start, x_end, t_start, t_end, n_x, c_initial)
+solve(a, d1, d2, x_start, x_end, t_start, t_end, n_x, c_initial)
