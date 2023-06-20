@@ -49,8 +49,8 @@ def test_neumann_bc_operation(bc, dc, c, index, dx, ans_dc):
                            [1.0, 2.0, 3.0, 4.0, 0.0])])
 def test_dirichlet_bc_operation(bc, dc, c, index, ans_c, ans_dc):
     """Test the operation() method of the DirichletBC class."""
-    dirichlet = DirichletBC(bc)
-    dirichlet.operation(dc, c, index)
+    dirichlet = DirichletBC(bc, index)
+    dirichlet.operation(dc, c)
     assert dc == ans_dc
     assert c == ans_c
 

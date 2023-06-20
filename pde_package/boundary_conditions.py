@@ -19,7 +19,7 @@ class BoundaryCondition:
         self.index = index
 
     def __str__(self):
-        """Return a string containing the type and value of the boundary condition."""
+        """Return a string of the type and value of the boundary condition."""
         return f"{self.symbol}[{self.index}] = {self.value}"
 
     def _validate(self):
