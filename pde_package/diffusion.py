@@ -7,8 +7,6 @@ class Diffusion:
         self.a2 = a2
         self.dx = dx
         self.bc = bc
-        # bca = BoundaryConditionApplier()
-        # conditions = bca.generate_boundary_conditions(values, types)
 
     def pde_system(self, x, t, c):
         n = len(c) // 2
@@ -20,10 +18,10 @@ class Diffusion:
         d2c2_dx2 = dc[n:]
 
         # Boundary conditions at x = -1
-        self.bc[0].operation(dc, c)
+        self.bc[0].operation(dc, c, self.dx)
 
         # Boundary conditions at x = 1
-        self.bc[-1].operation(dc, c)
+        self.bc[-1].operation(dc, c, self.dx)
 
         # Compute second derivative of C1 and C2 using central difference
         d2c1_dx2[1:-1] = (c1[:-2] - 2 * c1[1:-1] + c1[2:]) / self.dx**2

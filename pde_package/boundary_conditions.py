@@ -45,7 +45,7 @@ class DirichletBC(BoundaryCondition):
 
     symbol = "C"
 
-    def operation(self, dc, c):
+    def operation(self, dc, c, dx):
         dc[self.index] = 0
         c[self.index] = self.value
 
