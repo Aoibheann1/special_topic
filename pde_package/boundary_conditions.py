@@ -74,11 +74,11 @@ class BoundaryConditionApplier:
 
         bc = [None, None]
 
-        for i in range(2):
+        for i in [0, -1]:
             if types[i] == "neumann":
-                bc[i] = NeumannBC(values[i])
+                bc[i] = NeumannBC(values[i], i)
             elif types[i] == "dirichlet":
-                bc[i] = DirichletBC(values[i])
+                bc[i] = DirichletBC(values[i], i)
             else:
                 raise ValueError("Invalid boundary condition type")
 
