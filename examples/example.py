@@ -21,10 +21,11 @@ parameters = {
 
 # Initial conditions
 n_points = parameters['n_x']
-c_initial = np.concatenate((np.ones(n_points // 2), np.zeros(n_points // 2)))
+c1_initial = np.ones(n_points // 2)
+c2_initial = np.zeros(n_points // 2)
 
 # Create an instance of DiffusionSolver
-solver = DiffusionSolver(**parameters, c_initial=c_initial)
+solver = DiffusionSolver(**parameters, c1_initial=c1_initial, c2_initial = c2_initial)
 
 # Solve the PDE and visualize the solution at a specified time
 x1, x2, c1, c2, t = solver.solve_diffusion_system()

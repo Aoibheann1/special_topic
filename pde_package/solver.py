@@ -16,7 +16,8 @@ class DiffusionSolver:
         t_start: float,
         t_end: float,
         n_x: int,
-        c_initial: np.ndarray,
+        c1_initial: np.ndarray,
+        c2_initial: np.ndarray,
         left_bc_value: float,
         right_bc_value: float,
         left_bc_type: str,
@@ -34,7 +35,8 @@ class DiffusionSolver:
             t_start (float): Start time value.
             t_end (float): End time value.
             n_x (int): Number of x points.
-            c_initial (numpy.ndarray): Initial concentration values.
+            c1_initial (numpy.ndarray): Initial concentration values in region 1.
+            c2_initial (numpy.ndarray): Initial concentration values in region 2.
             left_bc_value (float): Value of the left boundary condition.
             right_bc_value (float): Value of the right boundary condition.
             left_bc_type (str): Type of the left boundary condition.
@@ -49,7 +51,8 @@ class DiffusionSolver:
         self.t_end = t_end
         self.n_x = n_x
         self.dx = 2.0 / self.n_x
-        self.c_initial = c_initial
+        self.c1_initial = c1_initial
+        self.c2_initial = c2_initial
         self.left_bc_value = left_bc_value
         self.right_bc_value = right_bc_value
         self.left_bc_type = left_bc_type
@@ -65,10 +68,13 @@ class DiffusionSolver:
         """
         a1 = self.d1 / self.d2 * (self.len_region2 / self.len_region1) ** 2
         a2 = self.d1 / self.d2 * (self.len_region2 / self.len_region1) / self.a
+        c_max = np.max(self.c_initial)
+        c_initial = np.concatenate(self.c1_initial, self.a * self.c2_initial) / c_max
         values = [self.left_bc_value, self.right_bc_value]
+        var = [self.a, self.len_region1, self.len_region2, c_max]
         types = [self.left_bc_type, self.right_bc_type]
         pde = DiffusionPDE(a1, a2, self.t_start, self.t_end, self.dx)
-        c, t = pde.solve_pde_system(self.c_initial, values, types)
+        c, t = pde.solve_pde_system(c_initial, values, var, types)
 
         c1 = c[:self.n_x // 2, :]
         c2 = c[self.n_x // 2:, :]
