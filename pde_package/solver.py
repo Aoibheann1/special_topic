@@ -1,6 +1,5 @@
 """Solver module."""
-from .pde import DiffusionPDE
-from .visualisation import Visualisation
+from .pde.diffusion import DiffusionPDE
 import numpy as np
 
 
@@ -56,7 +55,7 @@ class DiffusionSolver:
         self.left_bc_type = left_bc_type
         self.right_bc_type = right_bc_type
 
-    def solve_pde_system(self):
+    def solve_diffusion_system(self):
         """
         Solve the diffusion equation system.
 
@@ -70,34 +69,9 @@ class DiffusionSolver:
         types = [self.left_bc_type, self.right_bc_type]
         pde = DiffusionPDE(a1, a2, self.t_start, self.t_end, self.dx)
         c, t = pde.solve_pde_system(self.c_initial, values, types)
-        return c, t
 
-    def visualise_solution(self, c: np.ndarray, t: np.ndarray):
-        """
-        Visualise the solution.
-
-        Args:
-            c (numpy.ndarray): Array of concentration values.
-            t (numpy.ndarray): Array of time values.
-
-        Returns:
-            None
-        """
-        n_x = len(self.c_initial)
-        c1 = c[:n_x // 2, :]
-        c2 = c[n_x // 2:, :]
-        x1 = np.linspace(-1, -self.dx, n_x // 2)
-        x2 = np.linspace(self.dx, 1, n_x // 2)
-        visualisation = Visualisation(x1, x2, c1, c2, t)
-        visualisation.initialise_plot()
-        visualisation.show()
-
-    def solve_and_visualise(self):
-        """
-        Solve the diffusion equation system and visualise the solution.
-
-        Returns:
-            None
-        """
-        c, t = self.solve_pde_system()
-        self.visualise_solution(c, t)
+        c1 = c[:self.n_x // 2, :]
+        c2 = c[self.n_x // 2:, :]
+        x1 = np.linspace(-1, -self.dx, self.n_x // 2)
+        x2 = np.linspace(self.dx, 1, self.n_x // 2)
+        return x1, x2, c1, c2, t

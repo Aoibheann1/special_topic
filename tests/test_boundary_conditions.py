@@ -14,7 +14,6 @@ Author: Aoibheann1
 
 import pytest
 from pde_package.boundary_conditions import (
-    BoundaryCondition,
     NeumannBC,
     DirichletBC,
     BoundaryConditionApplier
@@ -23,55 +22,49 @@ from pde_package.boundary_conditions import (
 
 def test_boundary_condition_str():
     """Test the __str__() method of the BoundaryCondition class."""
-    bc = BoundaryCondition(1.0)
-    assert str(bc) == "The value of the boundary condition is = 1.0"
+    bc1 = NeumannBC(1.0, 0)
+    bc2 = DirichletBC(1.0, 1)
+    assert str(bc1) == "dC/dx[0] = 1.0"
+    assert str(bc2) == "C[1] = 1.0"
 
 
-@pytest.mark.parametrize("bc, dc, c, index, dx, ans_dc",
+@pytest.mark.parametrize("value, dc, c, index, dx, ans_dc",
                          [(2.0, [0.0] * 5, [1.0, 2.0, 3.0, 4.0, 5.0], 0, 0.5,
                            [4.0, 0.0, 0.0, 0.0, 0.0]),
-                          (2.0, [0.0] * 5, [0.0, 1.0, 2.0, 3.0, 4.0], -1, 0.5,
+                          (2.0, [0.0] * 5, [0.0, 1.0, 2.0, 3.0, 4.0], 1, 0.5,
                            [0.0, 0.0, 0.0, 0.0, -4.0])])
-def test_neumann_bc_operation(bc, dc, c, index, dx, ans_dc):
+def test_neumann_bc_operation(value, dc, c, index, dx, ans_dc):
     """Test the operation() method of the NeumannBC class."""
-    neumann = NeumannBC(bc)
-    assert neumann.operation(dc, c, index, dx) == ans_dc
+    neumann = NeumannBC(value, index)
+    assert neumann.apply(dc, c, dx) == ans_dc
 
 
-@pytest.mark.parametrize("bc, dc, c, index, ans_c, ans_dc",
+@pytest.mark.parametrize("bc, dc, c, index, dx, ans_c, ans_dc",
                          [(2.0, [1.0, 2.0, 3.0, 4.0, 5.0],
-                           [1.0, 2.0, 3.0, 4.0, 5.0], 0,
+                           [1.0, 2.0, 3.0, 4.0, 5.0], 0, 0.5,
                            [2.0, 2.0, 3.0, 4.0, 5.0],
                            [0.0, 2.0, 3.0, 4.0, 5.0]),
                           (2.0, [1.0, 2.0, 3.0, 4.0, 5.0],
-                           [1.0, 2.0, 3.0, 4.0, 5.0], -1,
+                           [1.0, 2.0, 3.0, 4.0, 5.0], 1, 0.5,
                            [1.0, 2.0, 3.0, 4.0, 2.0],
                            [1.0, 2.0, 3.0, 4.0, 0.0])])
-def test_dirichlet_bc_operation(bc, dc, c, index, ans_c, ans_dc):
+def test_dirichlet_bc_operation(bc, dc, c, index, dx, ans_c, ans_dc):
     """Test the operation() method of the DirichletBC class."""
     dirichlet = DirichletBC(bc, index)
-    dirichlet.operation(dc, c)
+    dirichlet.apply(dc, c, dx)
     assert dc == ans_dc
     assert c == ans_c
 
 
 def test_boundary_condition_applier():
     """Test the BoundaryConditionApplier class."""
-    bca = BoundaryConditionApplier()
-
     with pytest.raises(ValueError):
-        bca.generate_boundary_conditions([1.0], ["neumann", "dirichlet"])
-
+        BoundaryConditionApplier([1, 2, 3], ["dirichlet", "neumann"])
     with pytest.raises(ValueError):
-        bca.generate_boundary_conditions([1.0, 2.0, 3.0],
-                                         ["neumann", "dirichlet"])
-
+        BoundaryConditionApplier([1, 2], ["dirichlet", "neumann", "dirichlet"])
     with pytest.raises(ValueError):
-        bca.generate_boundary_conditions([1.0, 2.0], ["neumann", "invalid"])
-
-    conditions = bca.generate_boundary_conditions([1.0, 2.0],
-                                                  ["neumann", "dirichlet"])
-    assert type(conditions[0]) == NeumannBC
-    assert type(conditions[1]) == DirichletBC
-    assert conditions[0].value == 1.0
-    assert conditions[1].value == 2.0
+        BoundaryConditionApplier([1, 2], ["dirichlet", "invalid"])
+    bc_applier = BoundaryConditionApplier([1.0, 2.0], ["dirichlet", "neumann"])
+    bc = bc_applier.generate_boundary_condition_instances()
+    assert isinstance(bc[0], DirichletBC)
+    assert isinstance(bc[1], NeumannBC)

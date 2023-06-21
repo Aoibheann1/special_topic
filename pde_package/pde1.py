@@ -3,7 +3,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from typing import List, Tuple
 
-from .boundary_conditions import BoundaryConditionApplier
+from .boundary_conditions.applier import BoundaryConditionApplier
 
 
 class DiffusionPDE:

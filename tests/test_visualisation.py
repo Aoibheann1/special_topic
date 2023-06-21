@@ -3,6 +3,7 @@ import pytest
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from pde_package.visualisation import Visualisation
+from pytest_mock import mocker
 
 
 class TestVisualisation:
@@ -35,6 +36,7 @@ class TestVisualisation:
         mock_fig, mock_ax = mocker.patch.object(plt, "subplots"), mocker.Mock()
         mock_fig.return_value = (mock_fig, mock_ax)
         mock_line1, mock_line2 = mocker.Mock(), mocker.Mock()
+        visualisation.ax = mock_ax  # Assigning a mock object to visualisation.ax
         mocker.patch.object(visualisation.ax, "plot", return_value=(mock_line1, mock_line2))
         mocker.patch.object(visualisation.ax, "set_xlabel")
         mocker.patch.object(visualisation.ax, "set_ylabel")
@@ -56,6 +58,7 @@ class TestVisualisation:
         FuncAnimation.__init__.assert_called_once_with(
             mock_fig, visualisation.update_plot, frames=len(visualisation.t), interval=200
         )
+
 
     def test_visualisation_update_plot(self, visualisation):
         visualisation.line1 = mocker.Mock()
