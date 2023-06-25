@@ -1,5 +1,5 @@
 """Solver module."""
-from .pde.diffusion import DiffusionPDE
+from .solver.method_of_lines import DiffusionPDE
 import numpy as np
 
 
