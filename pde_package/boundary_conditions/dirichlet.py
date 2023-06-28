@@ -24,6 +24,10 @@ class DirichletBC(BoundaryCondition):
         parameters : dict
             Dictionary of boundary parameters.
         """
+        if self.value < 0:
+            raise ValueError("Dirichlet boundary condition value cannot be "
+                             "negative.")
+
         dc[-self.index] = 0
         c[-self.index] = self.value / (parameters['a'] ** self.index
                                        * parameters['c_max'])

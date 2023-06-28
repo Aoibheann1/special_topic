@@ -32,10 +32,11 @@ class MethodOfLines(BaseSolver):
         t_dim = solution.t
 
         # Split concentration values and x coordinates
-        c1 = c[:self.n, :]
-        c2 = c[self.n:, :]
-        x1 = np.linspace(-1, -self.dx, self.n)
-        x2 = np.linspace(self.dx, 1, self.n)
+        n = self.parameters['n']
+        c1 = c[:n, :]
+        c2 = c[n:, :]
+        x1 = np.linspace(-1, -self.dx, n)
+        x2 = np.linspace(self.dx, 1, n)
         t = (t_dim * self.parameters['len_region2'] ** 2
              / self.parameters['diffusion_coefficient2'])
 
@@ -51,10 +52,12 @@ class MethodOfLines(BaseSolver):
         Returns:
             numpy.ndarray: Array of computed time derivatives.
         """
+        n = self.parameters['n']
         dc = np.zeros_like(c)
-        d2c1_dx2 = dc[:self.n]
-        d2c2_dx2 = dc[self.n:]
-
+        d2c1_dx2 = dc[:n]
+        d2c2_dx2 = dc[n:]
+        c1 = c[:n]
+        c2 = c[n:]
         dx_squared = self.dx ** 2
 
         # Boundary conditions at x = -1
@@ -64,19 +67,19 @@ class MethodOfLines(BaseSolver):
         self.bc[-1].apply(dc, c, self.dx, self.parameters)
 
         # Compute second derivative of C1 and C2 using central difference
-        d2c1_dx2[1:-1] = np.diff(c[:self.n], 2) / dx_squared
-        d2c2_dx2[1:-1] = np.diff(c[self.n:], 2) / dx_squared
+        d2c1_dx2[1:-1] = np.diff(c1, 2) / dx_squared
+        d2c2_dx2[1:-1] = np.diff(c2, 2) / dx_squared
 
         # Precompute inverse of (1 + self.a2)
         inv_1_plus_a2 = 1 / (1 + self.a2)
 
         # Boundary conditions at x = 0
-        d2c1_dx2[-1] = ((-(2 + self.a2) * inv_1_plus_a2 * c[:self.n][-1]
-                        + c[:self.n][-2] + c[self.n:][0] * inv_1_plus_a2)
+        d2c1_dx2[-1] = ((-(2 + self.a2) * inv_1_plus_a2 * c1[-1]
+                        + c1[-2] + c2[0] * inv_1_plus_a2)
                         / dx_squared)
-        d2c2_dx2[0] = (c[self.n:][1] - (1 + 2 * self.a2) * inv_1_plus_a2
-                       * c[self.n:][0] + self.a2 * inv_1_plus_a2
-                       * c[:self.n][-1]) / dx_squared
+        d2c2_dx2[0] = (c2[1] - (1 + 2 * self.a2) * inv_1_plus_a2
+                       * c2[0] + self.a2 * inv_1_plus_a2
+                       * c1[-1]) / dx_squared
 
         # Compute the time derivatives
         dc1_dt = self.a1 * d2c1_dx2

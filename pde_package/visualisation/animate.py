@@ -21,7 +21,7 @@ class Animate(BasePlot):
         self.ax.set_xlabel('x')
         self.ax.set_ylabel('c')
         self.ax.set_xlim(np.min(self.x1), np.max(self.x2))
-        self.ax.set_ylim(0, 0.001)
+        self.ax.set_ylim(0, 1)
         self.ax.set_title('Time = ')
         self.ax.legend()
 

@@ -45,7 +45,9 @@ class BoundaryConditionApplier:
         """
         bc_mapping = {
             "neumann": NeumannBC,
-            "dirichlet": DirichletBC
+            "Neumann": NeumannBC,
+            "dirichlet": DirichletBC,
+            "Dirichlet": DirichletBC
         }
 
         bc = []

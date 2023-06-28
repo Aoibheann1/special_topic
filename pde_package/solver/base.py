@@ -14,11 +14,12 @@ class BaseSolver(ABC):
         len_region1: float,
         len_region2: float,
         a: float,
-        combined_n: int,
+        n: int,
         t_start: float,
         t_end: float,
         c1_initial: np.ndarray,
         c2_initial: np.ndarray,
+        c_max: float,
         left_bc_value: float,
         right_bc_value: float,
         left_bc_type: str,
@@ -33,13 +34,14 @@ class BaseSolver(ABC):
             len_region1 (float): Length of region 1.
             len_region2 (float): Length of region 2.
             a (float): Constant value.
-            combined_n (int): Total number of spatial points over both regions.
+            n (int): Number of spatial points in one region.
             t_start (float): Start time.
             t_end (float): End time.
             c1_initial (numpy.ndarray): Initial concentration values for
                                         region 1.
             c2_initial (numpy.ndarray): Initial concentration values for
                                         region 2.
+            c_max (float): Maximum value of c1_initial
             left_bc_value (float): Value of the left boundary condition.
             right_bc_value (float): Value of the right boundary condition.
             left_bc_type (str): Type of the left boundary condition.
@@ -51,14 +53,13 @@ class BaseSolver(ABC):
             'len_region1': len_region1,
             'len_region2': len_region2,
             'a': a,
-            'combined_n': combined_n,
-            'c_max': np.max(c1_initial)
+            'n': n,
+            'c_max': c_max
         }
         self._validate_parameters(parameters, c1_initial, c2_initial, t_start,
                                   t_end)
         self.parameters = parameters
-        self.dx = 2.0 / combined_n
-        self.n = combined_n // 2
+        self.dx = 1.0 / n
         self.a1 = self._calculate_a1()
         self.a2 = self._calculate_a2()
         self.c_initial = self._calculate_normalized_initial_conditions(
@@ -109,6 +110,13 @@ class BaseSolver(ABC):
                               value <= 0]
             raise ValueError("The following parameter(s) must be greater than"
                              f"zero: {', '.join(invalid_params)}")
+        if parameters['n'] < 2:
+            raise ValueError("n must be greater than or equal to 2.")
+
+        if parameters['a'] < 1:
+            raise ValueError("a must be greater than or equal to 1, swap the "
+                             "order of the solutions if this is the case, c1 "
+                             "to c2 and c2 to c1.")
 
         if t_start < 0:
             raise ValueError("t_start must be a non-negative value.")
@@ -119,7 +127,7 @@ class BaseSolver(ABC):
         if t_end <= t_start:
             raise ValueError("t_end must be greater than t_start.")
 
-        if np.any(c1_initial <= 0):
+        if np.any(c1_initial < 0):
             raise ValueError("c1_initial must contain positive values.")
 
         if np.any(c2_initial < 0):

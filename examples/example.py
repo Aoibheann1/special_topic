@@ -4,9 +4,9 @@ from pde_package.visualisation.plot import SpecifiedTimePlot
 import numpy as np
 
 # Initial conditions
-n_points = 1000
-c1_initial = np.ones(n_points // 2)
-c2_initial = np.zeros(n_points // 2)
+n_points = 50
+c1_initial = np.ones(n_points)
+c2_initial = np.zeros(n_points)
 
 
 # Set up the parameters
@@ -17,8 +17,8 @@ parameters = {
     'len_region1': 1e-1,
     'len_region2': 1e-3,
     't_start': 0.0,
-    't_end': 1e6,
-    'n_x': n_points,
+    't_end': 1e10,
+    'n': n_points,
     'left_bc_value': 0.0,
     'right_bc_value': 0.0,
     'left_bc_type': 'neumann',
