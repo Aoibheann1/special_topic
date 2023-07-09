@@ -1,8 +1,8 @@
 """Example 1D transmission diffusion equation problem.
 
 This script solves a 1D transmission diffusion partial differential equation
-using the Method of Lines. It provides visualizations of the solution using
-the provided visualization classes.
+using the Method of Lines. It provides visualisations of the solution using
+the provided visualisation classes.
 
 Usage:
 example1D.py [OPTIONS]
@@ -29,18 +29,24 @@ t_end (float): Ending time for the solution.
 n (int): Number of grid points.
 c1_initial (ndarray): Initial concentration values for region 1.
 c2_initial (ndarray): Initial concentration values for region 2.
+c_max: (float): Maximum value of the Initial concentration in region 1.
 left_bc_value (float): Value for the left boundary condition.
 right_bc_value (float): Value for the right boundary condition.
-left_bc_type (str): Type of the left boundary condition (options: Neumann, Dirichlet).
-right_bc_type (str): Type of the right boundary condition (options: Neumann, Dirichlet).
+left_bc_type (str): Type of the left boundary condition
+                    (options: Neumann, Dirichlet).
+right_bc_type (str): Type of the right boundary condition
+                     (options: Neumann, Dirichlet).
 
-Note: The script assumes the presence of the 'pde_package' module and its dependencies.
+Note: The script assumes the presence of the 'transmission_diffusion_pde'
+package and its dependencies.
 
 """
 
-from transmission_diffusion_pde.solver.method_of_lines import MethodOfLines
-from pde_package.visualisation.animate import Animate
-from pde_package.visualisation.plot import SpecifiedTimePlot
+from transmission_diffusion_pde import (
+    MethodOfLines,
+    Animate,
+    SpecifiedTimePlot
+)
 import numpy as np
 
 n_grid_points = 50
@@ -58,8 +64,8 @@ parameters = {
     'c2_initial': np.zeros(n_grid_points),
     'left_bc_value': 0.0,
     'right_bc_value': 0.0,
-    'left_bc_type': 'neumann',
-    'right_bc_type': 'neumann'
+    'left_bc_type': 'Neumann',
+    'right_bc_type': 'Neumann'
 }
 c_max = np.max(parameters['c1_initial'])
 

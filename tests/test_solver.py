@@ -1,7 +1,17 @@
-"""Docstring."""
+"""
+Pytest file for testing the solver subpackage.
+
+This pytest file contains test cases to ensure the proper functionality of the
+solver subpackage. The subpackage provides classes and functions for solving
+the diffusion process of a transmission diffusion PDE problem. The test cases
+cover various aspects of the subpackage, including the initialization and
+validation of the solver classes, steady state solutions, solver behavior with
+different initial conditions, solver stability under different parameter
+settings and solver performance.
+"""
+
 import numpy as np
-from pde_package.solver.base import BaseSolver
-from pde_package.solver.method_of_lines import MethodOfLines
+from transmission_diffusion_pde import BaseSolver, MethodOfLines
 import pytest
 import time
 
@@ -31,18 +41,18 @@ def solver_parameters():
         'c_max': 1.0,
         'left_bc_value': 0.0,
         'right_bc_value': 1.0,
-        'left_bc_type': 'dirichlet',
-        'right_bc_type': 'neumann'
+        'left_bc_type': 'Dirichlet',
+        'right_bc_type': 'Neumann'
     }
 
 
-def test_base_solver_initialization(solver_parameters):
-    """Test initialization of the BaseSolver class."""
+def test_base_solver_initialisation(solver_parameters):
+    """Test initialisation of the BaseSolver class."""
     solver = MockSolver(**solver_parameters)
 
     for param, value in solver.parameters.items():
         assert solver_parameters[param] == value
-    assert np.isclose(solver.dx, 0.2)
+    assert np.isclose(solver.h, 0.2)
     assert isinstance(solver, BaseSolver)
 
 
@@ -104,8 +114,8 @@ def test_steady_state_solution():
         'c_max': 1.0,
         'left_bc_value': 0.0,
         'right_bc_value': 0.0,
-        'left_bc_type': 'neumann',
-        'right_bc_type': 'neumann'
+        'left_bc_type': 'Neumann',
+        'right_bc_type': 'Neumann'
     }
     steady_state_c = 1.0 / (1 + solver_parameters['a']
                             * (solver_parameters['len_region2']
@@ -171,8 +181,8 @@ def test_solver_edge_cases(diffusion_coefficient1, diffusion_coefficient2,
     c_max = 1.0
     left_bc_value = 0.0
     right_bc_value = 0.0
-    left_bc_type = "neumann"
-    right_bc_type = "neumann"
+    left_bc_type = "Neumann"
+    right_bc_type = "Neumann"
 
     solver = MethodOfLines(
         diffusion_coefficient1, diffusion_coefficient2, len_region1,

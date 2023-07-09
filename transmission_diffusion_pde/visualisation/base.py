@@ -1,4 +1,13 @@
-"""docstring."""
+"""Module for the base implementation of visualisation.
+
+This module defines the abstract base class `BasePlot` for plotting
+concentration profiles of a transmission diffusion PDE system.
+
+Classes:
+- BasePlot: Abstract base class for plotting concentration profiles.
+
+"""
+
 from abc import ABC, abstractmethod
 import numpy as np
 
@@ -9,13 +18,13 @@ class BasePlot(ABC):
     def __init__(self, x1: np.ndarray, x2: np.ndarray, c1: np.ndarray,
                  c2: np.ndarray, t: np.ndarray):
         """
-        Initialize the BasePlot instance.
+        Initialise the BasePlot instance.
 
         Args:
-            x1 (numpy.ndarray): Array of x-coordinates for C1.
-            x2 (numpy.ndarray): Array of x-coordinates for C2.
-            c1 (numpy.ndarray): Array of concentration values for C1.
-            c2 (numpy.ndarray): Array of concentration values for C2.
+            x1 (numpy.ndarray): Array of x-coordinates for region 1.
+            x2 (numpy.ndarray): Array of x-coordinates for region 2.
+            c1 (numpy.ndarray): Array of concentration values for region 1.
+            c2 (numpy.ndarray): Array of concentration values for region 2.
             t (numpy.ndarray): Array of time values.
 
         Raises:
@@ -42,8 +51,10 @@ class BasePlot(ABC):
         x_lengths = {
             'x1': len(self.x1),
             'x2': len(self.x2),
-            'c1_rows': np.shape(self.c1)[0] if len(np.shape(self.c1)) > 1 else len(self.c1),
-            'c2_rows': np.shape(self.c2)[0] if len(np.shape(self.c2)) > 1 else len(self.c2)
+            'c1_rows': np.shape(self.c1)[0]
+            if len(np.shape(self.c1)) > 1 else len(self.c1),
+            'c2_rows': np.shape(self.c2)[0]
+            if len(np.shape(self.c2)) > 1 else len(self.c2)
         }
 
         inconsistent_x_lengths = [name for name, length in x_lengths.items()
@@ -57,8 +68,10 @@ class BasePlot(ABC):
 
         t_lengths = {
             't': len(self.t),
-            'c1_cols': np.shape(self.c1)[1] if len(np.shape(self.c1)) > 1 else 1,
-            'c2_cols': np.shape(self.c2)[1] if len(np.shape(self.c2)) > 1 else 1
+            'c1_cols': np.shape(self.c1)[1]
+            if len(np.shape(self.c1)) > 1 else 1,
+            'c2_cols': np.shape(self.c2)[1]
+            if len(np.shape(self.c2)) > 1 else 1
         }
 
         inconsistent_t_lengths = [name for name, length in t_lengths.items()

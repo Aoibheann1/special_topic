@@ -1,4 +1,18 @@
-"""docstring."""
+"""Module for implementing boundary conditions.
+
+This module defines the `BoundaryCondition` class, which is an abstract base
+class for implementing boundary conditions for transmission diffusion PDE
+problems.
+
+Classes:
+- BoundaryCondition: An abstract base class for boundary conditions.
+
+Exceptions:
+- ValueError: Raised when the input value for the boundary condition is not
+numerical.
+
+"""
+
 from abc import ABC, abstractmethod
 from numbers import Number
 from typing import Dict
@@ -37,13 +51,8 @@ class BoundaryCondition(ABC):
             )
 
     @abstractmethod
-    def apply(
-        self,
-        d2c_dx2: np.ndarray,
-        c: np.ndarray,
-        h: float,
-        parameters: Dict[str, float]
-    ):
+    def apply(self, d2c_dx2: np.ndarray, c: np.ndarray, h: float,
+              parameters: Dict[str, float]):
         """Apply the boundary condition operation.
 
         Parameters:

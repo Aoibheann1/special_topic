@@ -1,3 +1,18 @@
+"""Module for applying boundary conditions.
+
+This module provides the `BoundaryConditionApplier` class, which is
+responsible for applying boundary conditions to input data.
+
+Classes:
+- BoundaryConditionApplier: A class that applies boundary conditions to input
+                            data.
+
+Exceptions:
+- ValueError: Raised when an invalid number of values or types is provided or
+              when an invalid boundary condition type is encountered.
+
+"""
+
 from .dirichlet import DirichletBC
 from .neumann import NeumannBC
 from .base import BoundaryCondition
@@ -8,7 +23,7 @@ class BoundaryConditionApplier:
     """A class that applies boundary conditions to input data."""
 
     def __init__(self, values: List[float], types: List[str]):
-        """Initialize the BoundaryConditionApplier.
+        """Initialise the BoundaryConditionApplier.
 
         Parameters
         ----------
@@ -43,9 +58,7 @@ class BoundaryConditionApplier:
             List of boundary condition instances.
         """
         bc_mapping = {
-            "neumann": NeumannBC,
             "Neumann": NeumannBC,
-            "dirichlet": DirichletBC,
             "Dirichlet": DirichletBC
         }
 

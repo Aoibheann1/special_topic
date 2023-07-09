@@ -1,11 +1,24 @@
-"""Solver base class."""
+"""Module for implementing solvers.
+
+This module defines the `BaseSolver` class, which serves as an abstract base
+class for solving transmission diffusion PDEs. It provides common
+functionality and methods needed for solving these PDE systems.
+
+Classes:
+- BaseSolver: Abstract base class for transmission diffusion PDEs.
+
+Exceptions:
+- ValueError: Raised when any input parameter values are invalid.
+
+"""
+
 import numpy as np
 from abc import ABC, abstractmethod
 from typing import Tuple
 
 
 class BaseSolver(ABC):
-    """Abstract base class for PDEs."""
+    """Abstract base class for transmission diffusion PDEs."""
 
     def __init__(
         self,
@@ -26,7 +39,7 @@ class BaseSolver(ABC):
         right_bc_type: str
     ) -> None:
         """
-        Initialize the BaseSolver.
+        Initialise the BaseSolver.
 
         Args:
             diffusion_coefficient1 (float): Diffusion coefficient for region 1.
@@ -41,7 +54,8 @@ class BaseSolver(ABC):
                                         region 1.
             c2_initial (numpy.ndarray): Initial concentration values for
                                         region 2.
-            c_max (float): Maximum value of c1_initial
+            c_max (float): Maximum value of the initial concentration in
+                           region 1.
             left_bc_value (float): Value of the left boundary condition.
             right_bc_value (float): Value of the right boundary condition.
             left_bc_type (str): Type of the left boundary condition.
@@ -59,10 +73,10 @@ class BaseSolver(ABC):
         self._validate_parameters(parameters, c1_initial, c2_initial, t_start,
                                   t_end)
         self.parameters = parameters
-        self.dx = 1.0 / n
+        self.h = 1.0 / n
         self.a1 = self._calculate_a1()
         self.a2 = self._calculate_a2()
-        self.c_initial = self._calculate_normalized_initial_conditions(
+        self.c_initial = self._calculate_normalised_initial_conditions(
             c1_initial, c2_initial)
         self.values = [left_bc_value, right_bc_value]
         self.types = [left_bc_type, right_bc_type]
@@ -164,13 +178,13 @@ class BaseSolver(ABC):
         return (diffusion_coefficient1 / diffusion_coefficient2
                 * (len_region2 / len_region1) / a)
 
-    def _calculate_normalized_initial_conditions(
+    def _calculate_normalised_initial_conditions(
         self,
         c1_initial: np.ndarray,
         c2_initial: np.ndarray
     ) -> np.ndarray:
         """
-        Calculate the normalized initial conditions.
+        Calculate the normalised initial conditions.
 
         Args:
             c1_initial (numpy.ndarray): Initial concentration values for
@@ -179,7 +193,7 @@ class BaseSolver(ABC):
                                         region 2.
 
         Returns:
-            numpy.ndarray: The normalized initial conditions.
+            numpy.ndarray: The normalised initial conditions.
         """
         c_max = self.parameters['c_max']
         c_initial = np.concatenate((c1_initial, c2_initial /

@@ -1,4 +1,14 @@
-"""docstring."""
+"""Module for animating the diffusion process.
+
+This module provides the `Animate` class, which animates the diffusion process.
+It utilizes the `matplotlib` library to generate the animation based on the
+provided concentration data.
+
+Classes:
+- Animate: Class for animating the diffusion process.
+
+"""
+
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
@@ -9,17 +19,20 @@ from .base import BasePlot
 class Animate(BasePlot):
     """Class for animating the diffusion process."""
 
-    def initialize_plot(self):
+    def animate_solution(self):
         """
-        Initialize the plot.
+        Create and animate the diffusion process.
 
         This method sets up the figure, axes, and initial plot configuration.
+        It creates an animation by updating the plot data for each frame based
+        on the provided time steps.
+
         """
         self.fig, self.ax = plt.subplots()
         self.line1, = self.ax.plot([], [], 'bo', markersize=2, label='C1')
         self.line2, = self.ax.plot([], [], 'ro', markersize=2, label='C2')
         self.ax.set_xlabel('x')
-        self.ax.set_ylabel('c')
+        self.ax.set_ylabel('C')
         self.ax.set_xlim(np.min(self.x1), np.max(self.x2))
         self.ax.set_ylim(0, 1)
         self.ax.set_title('Time = ')
@@ -42,20 +55,23 @@ class Animate(BasePlot):
         self.ax.set_title(f'Time = {self.t[frame]:.2e}s')
 
     def show(self):
-        """Show the plot."""
-        self.initialize_plot()
+        """
+        Show the animation plot.
+
+        This method displays the animated plot on the screen.
+        """
+        self.animate_solution()
         plt.show()
 
     def save(self, filename: str, dpi: int = 100):
         """
-        Save the animation as a video file.
+        Save the animation plot as a video file.
 
         Args:
-            filename (str): The filename of the video file.
-            dpi (int): The resolution of the video (dots per inch).
+            filename (str): The filename of the output video file.
+            dpi (int): The resolution of the video in dots per inch.
 
-        This method initializes the plot and saves the animation as a video
-        file.
+        This method saves the animation as a video file.
         """
-        self.initialize_plot()
+        self.animate_solution()
         self.anim.save(filename, dpi=dpi)

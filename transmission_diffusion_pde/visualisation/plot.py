@@ -1,4 +1,14 @@
-"""docstring."""
+"""Module for plotting a particular time instance of the solution.
+
+This module defines the `SpecifiedTimePlot` class for plotting the
+concentration profile of a transmission diffusion PDE system at a specified
+time.
+
+Classes:
+- SpecifiedTimePlot: Class for plotting a single instance of the solution.
+
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 from .base import BasePlot
@@ -25,11 +35,9 @@ class SpecifiedTimePlot(BasePlot):
 
         desired_time = self.t[-1] * time_fraction
 
-        # Calculate the fractional indices for the desired time
         fractional_indices = np.interp(desired_time, self.t,
                                        np.arange(len(self.t)))
 
-        # Round the fractional indices to the nearest integer
         time_index = np.round(fractional_indices).astype(int)
 
         return time_index
@@ -48,7 +56,7 @@ class SpecifiedTimePlot(BasePlot):
         plt.plot(self.x2, self.c2[:, time_index], 'ro', markersize=2,
                  label='C2')
         plt.xlabel('x')
-        plt.ylabel('c')
+        plt.ylabel('C')
         plt.xlim(np.min(self.x1), np.max(self.x2))
         plt.ylim(0, None)
         plt.title('Plot of dimensionless concentration at '
