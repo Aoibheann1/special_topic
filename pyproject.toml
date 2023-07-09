@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pde_package"
+name = "transmission_diffusion_pde"
 version = "0.0.1"
 authors = [
   { name="Aoibheann1", email="alilymurray247@gmail.com" },

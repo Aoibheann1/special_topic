@@ -38,7 +38,7 @@ Note: The script assumes the presence of the 'pde_package' module and its depend
 
 """
 
-from pde_package.solver.method_of_lines import MethodOfLines
+from transmission_diffusion_pde.solver.method_of_lines import MethodOfLines
 from pde_package.visualisation.animate import Animate
 from pde_package.visualisation.plot import SpecifiedTimePlot
 import numpy as np
