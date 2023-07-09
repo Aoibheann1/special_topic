@@ -203,6 +203,5 @@ def test_solver_performance(n, threshold, solver_parameters):
     solver.solve_pde_system()
     end_time = time.time()
     execution_time = end_time - start_time
-
     assert execution_time < threshold, ("Execution time exceeded threshold: "
                                         f"{execution_time} s")

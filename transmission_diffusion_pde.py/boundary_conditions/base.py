@@ -9,7 +9,7 @@ class BoundaryCondition(ABC):
     """An abstract base class for boundary conditions."""
 
     def __init__(self, value: float, index: int):
-        """Initialize the BoundaryCondition instance.
+        """Initialise the BoundaryCondition instance.
 
         Parameters:
         - value (float): The input value of the boundary condition.
@@ -32,27 +32,26 @@ class BoundaryCondition(ABC):
         """
         if not isinstance(self.value, Number):
             raise ValueError(
-                "The input boundary condition must be a number, not"
-                f"{type(self.value).__name__}."
+                "The input value for the boundary condition must be a number,"
+                f" not a {type(self.value).__name__}."
             )
 
     @abstractmethod
     def apply(
         self,
-        dc: np.ndarray,
+        d2c_dx2: np.ndarray,
         c: np.ndarray,
-        dx: float,
+        h: float,
         parameters: Dict[str, float]
-    ) -> np.ndarray:
+    ):
         """Apply the boundary condition operation.
 
         Parameters:
-        - dc (numpy.ndarray): Array of concentration derivatives.
+        - d2c_dx2 (numpy.ndarray): Array of discretised second derivatives of
+                                   the concentration.
         - c (numpy.ndarray): Array of concentration values.
-        - dx (float): Step size.
+        - h (float): Step size.
         - parameters (Dict[str, Any]): Boundary parameters.
 
-        Returns:
-        - numpy.ndarray: Updated array of concentration derivatives.
         """
         pass

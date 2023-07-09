@@ -9,13 +9,13 @@ class NeumannBC(BoundaryCondition):
 
     symbol = "dC/dx"
 
-    def apply(self, dc: np.ndarray, c: np.ndarray, dx: float, parameters:
-              Dict[str, float]) -> np.ndarray:
+    def apply(self, d2c_dx2: np.ndarray, c: np.ndarray, dx: float, parameters:
+              Dict[str, float]):
         """Apply the Neumann boundary condition.
 
         Parameters
         ----------
-        dc : numpy.ndarray
+        d2c_dx2 : numpy.ndarray
             Array of concentration derivatives.
         c : numpy.ndarray
             Array of concentration values.
@@ -26,8 +26,9 @@ class NeumannBC(BoundaryCondition):
 
         """
         regions = [parameters['len_region1'], parameters['len_region2']]
-        scaled_value = (self.value * regions[self.index] / (parameters['c_max']
-                                                            * parameters['a']
-                                                            ** self.index))
-        dc[-self.index] = (2 * c[-3 * self.index + 1] - 2 * c[-self.index]
+        scaled_value = (
+            self.value * regions[self.index]
+            / (parameters['c_max'] * parameters['a'] ** self.index)
+            )
+        d2c_dx2[-self.index] = (2 * c[-3 * self.index + 1] - 2 * c[-self.index]
                            - (-1) ** self.index * dx * scaled_value) / dx ** 2

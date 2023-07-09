@@ -1,4 +1,3 @@
-"""docstring."""
 from .dirichlet import DirichletBC
 from .neumann import NeumannBC
 from .base import BoundaryCondition
@@ -50,13 +49,13 @@ class BoundaryConditionApplier:
             "Dirichlet": DirichletBC
         }
 
-        bc = []
+        bc_instance_list = []
 
         for i, (value, bc_type) in enumerate(zip(self.values, self.types)):
             if bc_type not in bc_mapping:
                 raise ValueError("Invalid boundary condition type")
             bc_class = bc_mapping[bc_type]
             bc_instance = bc_class(value, i)
-            bc.append(bc_instance)
+            bc_instance_list.append(bc_instance)
 
-        return bc
+        return bc_instance_list

@@ -49,11 +49,13 @@ class SpecifiedTimePlot(BasePlot):
                  label='C2')
         plt.xlabel('x')
         plt.ylabel('c')
+        plt.xlim(np.min(self.x1), np.max(self.x2))
+        plt.ylim(0, None)
         plt.title('Plot of dimensionless concentration at '
                   f't={self.t[time_index]:.2e}s')
         plt.legend()
 
-    def show(self, time_fraction: float):
+    def show(self, time_fraction: float = 1.0):
         """
         Show the plot.
 
@@ -63,7 +65,7 @@ class SpecifiedTimePlot(BasePlot):
         self.plot_solution(time_fraction)
         plt.show()
 
-    def save(self, filename: str, time_fraction: float, dpi: int = 100):
+    def save(self, filename: str, time_fraction: float = 1.0, dpi: int = 100):
         """
         Save the plot as an image file.
 
